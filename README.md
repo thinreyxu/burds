@@ -3,7 +3,7 @@ Burds
 
 A simple wallpaper tuning utility on Ubuntu inspired by [Muzei Live Wallpaper](https://play.google.com/store/apps/details?id=net.nurik.roman.muzei). Burds gives wallpapers a blurred and dimmed look, sometimes an additional noisy look.
 
-## Prerequisite
+## Prerequisites
 + Running [Ubuntu](http://www.ubuntu.com/global)
 + Having [GraphicsMagick](http://www.graphicsmagick.org/) installed
 
