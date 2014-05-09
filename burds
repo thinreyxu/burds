@@ -86,7 +86,7 @@ then
   fpath=`cd $(dirname $1) && echo "$PWD/$fname"`
 else
   fpathstr=`gsettings get org.gnome.desktop.background picture-uri`
-  echo $fpathstr
+  # echo $fpathstr
   fpathlen=`echo ${#fpathstr}`
   fpath=`echo $(expr substr $fpathstr 9 $(($fpathlen - 9)))`
   # decode uri
