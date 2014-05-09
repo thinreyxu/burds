@@ -1,0 +1,144 @@
+#!/usr/bin/env bash
+
+# 配置
+burdsFdir=~/Pictures/burds
+burdsFpath=$burdsFdir/now.jpg
+burdsFtemp=$burdsFdir/tmp.jpg
+levelDark=0
+levelLight=255
+levelGamma=0.9
+saturation=50
+blurRadius=20
+blurRsigma=10
+noiseAmount=10
+noiseType=laplacian
+
+help="\
+#################################\n\
+# Burds Help:                  #\n\
+#   -b|--blur [0,100]           #\n\
+#   -d|--dim [0,200]            #\n\
+#   -s|--saturation [0,200]     #\n\
+#   -n|--noise [0,100]          #\n\
+#   -h|--help                   #\n\
+#################################\n"
+
+# 处理参数
+args=`getopt -o hb:d:s:n: --long help,blur:,dim:,saturation:,noise: -n "Error" -- "$@"`
+
+# 参数不匹配，退出。
+if [ $? != 0 ]
+then
+  exit 1;
+fi
+
+# 重新设置排序后的参数
+eval set -- "$args"
+while true
+do
+  case "$1" in
+    -h|--help)
+      echo "$help"
+      shift ; exit ;;
+    -b|--blur)
+      blurRadius=$2
+      shift 2 ;;
+    -d|--dim)
+      # 需要精确计算保留两位小数
+      levelGamma=`echo "scale=2;$2 / 100" | bc`
+      shift 2 ;;
+    -s|--saturation)
+      saturation=$2
+      shift 2 ;;
+    -n|--noise)
+      noiseAmount=$2
+      shift 2 ;;
+    --)
+      shift ; break ;;
+    *)
+      echo "Internal error!"
+      exit 1 ;;
+  esac
+done
+
+# url 解码
+urldecode() {
+  arg="$1"
+  i="0"
+  while [ "$i" -lt ${#arg} ]; do
+    c0=${arg:$i:1}
+    if [ "x$c0" = "x%" ]; then
+     c1=${arg:$((i+1)):1}
+     c2=${arg:$((i+2)):1}
+     printf "\x$c1$c2"
+     i=$((i+3))
+    else
+     echo -n "$c0"
+     i=$((i+1))
+   fi
+  done
+}
+
+# 获取文件
+if [ $# != 0 ]
+then
+  fname=`basename $1`
+  fpath=`cd $(dirname $1) && echo "$PWD/$fname"`
+else
+  fpathstr=`gsettings get org.gnome.desktop.background picture-uri`
+  fpathlen=`echo ${#fpathstr}`
+  fpath=`echo $(expr substr $fpathstr 9 $(($fpathlen - 9)))`
+  # decode uri
+  fpath=`urldecode $fpath`
+fi
+
+# 检测文件存在
+if ! [ -f "$fpath" ]
+then
+  echo "File does not exist: $fpath"
+  exit
+fi
+
+###### Blur & Dim Wallpaper######
+
+if ! [ "$(which gm)" ]
+then
+  echo "You need GraphicsMagick to blur and dim pictures."
+  exit
+else
+  echo "GraphicsMagick detected, processing pictures..."
+  # 创建文件夹
+  mkdir -p $burdsFdir
+
+  # 复制源文件为临时操作文件
+  cp "$fpath" "$burdsFtemp"
+
+  # 色阶 level
+  gm convert -level "$levelDark","$levelGamma","$levelLight" "$burdsFtemp" "$burdsFtemp"
+
+  # 饱和度 saturation
+  gm convert -modulate 100,"$saturation" "$burdsFtemp" "$burdsFtemp"
+
+  # 模糊 blur
+  # -blur 比高斯模糊更高效
+  if [ "$blurRadius" != 0 ] ; then
+    gm convert -blur "$blurRadius"x"$blurRsigma" "$burdsFtemp" "$burdsFtemp"
+  fi
+
+  # 噪点 add noise
+  if [ "$noiseAmount" != 0 ] ; then
+    gm convert -operator all noise-"$noiseType" "$noiseAmount"% "$burdsFtemp" "$burdsFtemp"
+  fi
+
+  # 重命名为正式文件
+  mv "$burdsFtemp" "$burdsFpath"
+fi
+
+if [ "$(pidof gnome-settings-daemon)" ] || [ "$(pidof unity-settings-daemon)" ]
+then
+  echo "Gnome-settings-daemons detected, setting wallpaper with gsettings..."
+  gsettings set org.gnome.desktop.background picture-uri "file://$burdsFpath"
+else
+  echo "Cannot set wallpaper using gsettings"
+  exit
+fi
