@@ -1,0 +1,99 @@
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  margin: 0;
+  font: 14px/1.8 'Roboto Slab', 'Times New Roman', Georgia, serif;
+  color: #d4d4d4;
+  background: #333;
+}
+a {
+  text-decoration: none;
+}
+a:link,
+a:visited {
+  color: #773CAD;
+}
+a:hover,
+a:focus {
+  color: #995ECF;
+}
+a:active {
+  color: #884DBE;
+}
+.title {
+  font-family: 'Roboto Slab', serif;
+  color: #fff;
+  font-size: 32px;
+}
+.text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.container {
+  height: 100%;
+}
+.content {
+  position: relative;
+  width: 500px;
+  margin: -90px auto 0;
+  top: 40%;
+  padding: 40px;
+  overflow: hidden;
+  box-shadow: -2px 2px 1px 0 rgba(0,0,0,0.2);
+
+   /* Optional Gradient */
+  background: -moz-linear-gradient(-135deg, transparent 0, transparent 16px, rgba(0,0,0,0.7) 17px); /* FF3.6+ */
+  background: -webkit-gradient(linear, right top, left bottom, color-stop(0,transparent), color-stop(16px,transparent), color-stop(17px,rgba(0,0,0,0.7))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(-135deg, transparent 0, transparent 16px, rgba(0,0,0,0.7) 17px); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(-135deg, transparent 0, transparent 16px, rgba(0,0,0,0.7) 17px); /* Opera 11.10+ */
+  background: -ms-linear-gradient(-135deg, transparent 0, transparent 16px, rgba(0,0,0,0.7) 17px); /* IE10+ */
+  background: linear-gradient(-135deg, transparent 0, transparent 16px, rgba(0,0,0,0.7) 17px); /* W3C */
+}
+.content::before {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 22px;
+  height: 22px;
+  box-shadow: 0 0 3px 2px rgba(0,0,0,0.9);
+
+  background: -moz-linear-gradient(-135deg, transparent 0, transparent 15px, rgba(128,128,128,0.9) 15px); /* FF3.6+ */
+  background: -webkit-gradient(linear, right top, left bottom, color-stop(0,transparent), color-stop(15px,transparent), color-stop(15px,rgba(128,128,128,0.9))); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(-135deg, transparent 0, transparent 15px, rgba(128,128,128,0.9) 15px); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(-135deg, transparent 0, transparent 15px, rgba(128,128,128,0.9) 15px); /* Opera 11.10+ */
+  background: -ms-linear-gradient(-135deg, transparent 0, transparent 15px, rgba(128,128,128,0.9) 15px); /* IE10+ */
+  background: linear-gradient(-135deg, transparent 0, transparent 15px, rgba(128,128,128,0.9) 15px); /* W3C */
+}
+.intro .title {
+  float: left;
+  margin: 0 30px 0 0;
+  line-height: 1.1;
+}
+.intro .text {
+  overflow: hidden;
+  border-left: solid 1px #666;
+  padding-left: 30px;
+}
+.intro p {
+  margin: 0;
+}
+.intro .tips {
+  margin-top: 20px;
+}
+.intro .tips strong::before,
+.intro .tips strong::after {
+  content: '*';
+  display: inline;
+  margin: 0 2px;
+}
+.testImage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+}
