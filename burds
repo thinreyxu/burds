@@ -123,7 +123,8 @@ else
   # 模糊 blur
   # -blur 比高斯模糊更高效
   if [ "$blurRadius" != 0 ] ; then
-    gm convert -blur "$blurRadius"x"$blurRadius" "$burdsFtemp" "$burdsFtemp"
+    gm convert -blur "$blurRadius"x"$blurRsigma" "$burdsFtemp" "$burdsFtemp"
+    # gm convert -blur "$blurRadius" "$burdsFtemp" "$burdsFtemp"
   fi
 
   # 噪点 add noise
